@@ -60,17 +60,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin(){
-        String email = emailEdit.getText().toString();
-        String password = passwordEdit.getText().toString();
 
-        try {
-            JSONObject json = new JSONObject();
-            json.put("email", email);
-            json.put("password", password);
-            sendRequest(json.toString());
-        }catch (JSONException e){
-            e.printStackTrace();
-            Toast.makeText(this,"JSON Error"+e,Toast.LENGTH_SHORT).show();
+        if(emailEdit != null&&passwordEdit != null) {
+            String email = emailEdit.getText().toString();
+            String password = passwordEdit.getText().toString();
+
+            try {
+                JSONObject json = new JSONObject();
+                json.put("email", email);
+                json.put("password", password);
+                sendRequest(json.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "JSON Error" + e, Toast.LENGTH_SHORT).show();
+            }
+        } else{
+            Toast.makeText(this, "Fields must be not empty", Toast.LENGTH_SHORT).show();
         }
     }
 

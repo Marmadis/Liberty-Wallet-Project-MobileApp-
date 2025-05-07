@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    tools:context=".RegisterActivity">
 
 
     <ImageButton
-        android:id="@+id/back_btn_transactionf"
+        android:id="@+id/back_btn_budget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/back_btn_image"
@@ -20,13 +21,13 @@
         android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/adding_transaction_title"
+        android:id="@+id/adding_budget_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
+        android:layout_marginStart="55dp"
         android:layout_marginTop="75dp"
         android:fontFamily="@font/inter_medium"
-        android:text="Adding a transaction"
+        android:text="Adding a budget"
         android:textColor="@color/white"
         android:textSize="35sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +37,7 @@
 
 
     <EditText
-        android:id="@+id/name_transaction_edit"
+        android:id="@+id/limit_amount_edit"
         android:layout_width="242dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="85dp"
@@ -44,14 +45,14 @@
         android:fontFamily="@font/inter_light"
         android:background="@drawable/rounded_box"
         android:padding="12dp"
-        android:hint="Name of the transaction"
+        android:hint="Limit amount"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adding_transaction_title" />
+        app:layout_constraintTop_toBottomOf="@+id/adding_budget_title" />
 
     <TextView
-        android:id="@+id/name_transaction_Error"
+        android:id="@+id/limit_amount_Error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -61,11 +62,68 @@
         android:visibility="gone"
         android:text="Error"
         android:textColor="@color/red"
-        app:layout_constraintStart_toStartOf="@+id/name_transaction_edit"
-        app:layout_constraintTop_toBottomOf="@+id/name_transaction_edit" />
+        app:layout_constraintStart_toStartOf="@+id/limit_amount_edit"
+        app:layout_constraintTop_toBottomOf="@+id/limit_amount_edit" />
 
     <EditText
-        android:id="@+id/date_transaction_edit"
+        android:id="@+id/current_balance_edit"
+        android:layout_width="242dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/rounded_box"
+        android:padding="12dp"
+        android:fontFamily="@font/inter_light"
+        android:textColorHint="@color/white"
+        android:hint="Current balance"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/limit_amount_edit"
+        app:layout_constraintTop_toBottomOf="@+id/limit_amount_edit" />
+
+    <TextView
+        android:id="@+id/current_balance_Error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_medium"
+        android:text="Error"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="7dp"
+        android:textColor="@color/red"
+        android:textSize="13dp"
+        app:layout_constraintStart_toStartOf="@+id/current_balance_edit"
+        app:layout_constraintTop_toBottomOf="@+id/current_balance_edit" />
+
+    <EditText
+        android:id="@+id/start_date_edit"
+        android:layout_width="242dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/rounded_box"
+        android:padding="12dp"
+        android:fontFamily="@font/inter_light"
+        android:textColorHint="@color/white"
+        android:hint="Start date"
+        android:focusable="false"
+        android:clickable="true"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/current_balance_edit"
+        app:layout_constraintTop_toBottomOf="@+id/current_balance_edit" />
+
+    <TextView
+        android:id="@+id/start_date_Error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_medium"
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="7dp"
+        android:text="Error"
+        android:textColor="@color/red"
+        android:textSize="13dp"
+        app:layout_constraintStart_toStartOf="@+id/start_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/start_date_edit" />
+    <EditText
+        android:id="@+id/end_date_edit"
         android:layout_width="242dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -75,67 +133,24 @@
         android:clickable="true"
         android:fontFamily="@font/inter_light"
         android:textColorHint="@color/white"
-        android:hint="The date"
+        android:hint="End date"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/name_transaction_edit"
-        app:layout_constraintTop_toBottomOf="@+id/name_transaction_edit" />
+        app:layout_constraintStart_toStartOf="@+id/start_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/start_date_edit" />
 
     <TextView
-        android:id="@+id/date_transaction_Error"
+        android:id="@+id/end_date_Error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_medium"
-        android:text="Error"
         android:visibility="gone"
         android:layout_marginTop="5dp"
         android:layout_marginStart="7dp"
-        android:textColor="@color/red"
-        android:textSize="13dp"
-        app:layout_constraintStart_toStartOf="@+id/date_transaction_edit"
-        app:layout_constraintTop_toBottomOf="@+id/date_transaction_edit" />
-
-    <EditText
-        android:id="@+id/amount_transaction_edit"
-        android:layout_width="242dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/rounded_box"
-        android:padding="12dp"
-        android:fontFamily="@font/inter_light"
-        android:textColorHint="@color/white"
-        android:hint="The amount"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/date_transaction_edit"
-        app:layout_constraintTop_toBottomOf="@+id/date_transaction_edit" />
-
-    <TextView
-        android:id="@+id/amount_transaction_Error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:fontFamily="@font/inter_medium"
-        android:visibility="gone"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="7dp"
         android:text="Error"
         android:textColor="@color/red"
         android:textSize="13dp"
-        app:layout_constraintStart_toStartOf="@+id/amount_transaction_edit"
-        app:layout_constraintTop_toBottomOf="@+id/amount_transaction_edit" />
-
-
-
-    <Spinner
-        android:id="@+id/category_spinner"
-        android:layout_width="242dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/rounded_box"
-        android:fontFamily="@font/inter_medium"
-        app:layout_constraintStart_toStartOf="@+id/amount_transaction_edit"
-        app:layout_constraintTop_toBottomOf="@+id/amount_transaction_edit" />
-
-
-
+        app:layout_constraintStart_toStartOf="@+id/end_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/end_date_edit" />
 
     <Button
         android:id="@+id/save_transaction_button"
@@ -147,8 +162,8 @@
         android:fontFamily="@font/inter_medium"
         android:textSize="25dp"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/category_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
+        app:layout_constraintStart_toStartOf="@+id/end_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/end_date_edit" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

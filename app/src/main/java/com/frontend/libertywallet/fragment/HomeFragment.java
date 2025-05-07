@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client  = new OkHttpClient();
 
-    TextView transactionView,paymentView,currentBalanceText;
+    TextView transactionView,paymentView,currentBalanceText,budgetView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +48,10 @@ public class HomeFragment extends Fragment {
         transactionView = view.findViewById(R.id.transaction_button);
         paymentView = view.findViewById(R.id.payment_button);
         currentBalanceText = view.findViewById(R.id.balance_view);
+        budgetView = view.findViewById(R.id.budget_add_btn);
         prefs = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE);
+
+        budgetView.setOnClickListener(v -> openBudget());
         transactionView.setOnClickListener(v -> openTransaction());
         paymentView.setOnClickListener(v -> openPayment());
     }
@@ -107,6 +110,12 @@ public class HomeFragment extends Fragment {
 
 
 
+    public void openBudget(){
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new BudgetFragment())
+                .addToBackStack(null)
+                .commit();
+    }
     private void openTransaction(){
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new TransactionFragment())

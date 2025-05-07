@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -30,7 +31,7 @@
         android:fontFamily="@font/inter_medium"
         android:gravity="center"
         android:textColor="@color/black"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="65dp"
         android:background="@drawable/white_box"
         android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,9 +46,35 @@
         android:fontFamily="@font/inter_medium"
         android:gravity="center"
         android:textColor="@color/black"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="65dp"
         android:layout_marginRight="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/balance_view" />
+
+    <TextView
+        android:id="@+id/budget_add_btn"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+        android:background="@drawable/white_box"
+        android:fontFamily="@font/inter_medium"
+        android:gravity="center"
+        android:text="Add budget"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/transaction_button"
+        app:layout_constraintTop_toBottomOf="@+id/transaction_button" />
+
+    <TextView
+        android:id="@+id/category_add_btn"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+        android:background="@drawable/white_box"
+        android:fontFamily="@font/inter_medium"
+        android:gravity="center"
+        android:text="Add category"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/payment_button"
+        app:layout_constraintTop_toBottomOf="@+id/payment_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

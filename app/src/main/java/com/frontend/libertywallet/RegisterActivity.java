@@ -82,10 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
             }catch (Exception e){
                 e.printStackTrace();
                 Toast.makeText(this,"Json error",Toast.LENGTH_SHORT).show();
-                return;
             }
-        }else{
-            return;
         }
 
     }
