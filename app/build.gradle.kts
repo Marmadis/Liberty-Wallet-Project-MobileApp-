@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+
+    implementation ("com.github.ismaeldivita:chip-navigation-bar:1.4.0")
     implementation ("com.squareup.okhttp3:okhttp:4.12.0")
     implementation(libs.appcompat)
     implementation(libs.material)

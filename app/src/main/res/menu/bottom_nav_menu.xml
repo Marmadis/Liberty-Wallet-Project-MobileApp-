@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/home_noactiv"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/wallet"
+        android:icon="@drawable/wallet_noactiv"
+        android:title="Wallet" />
+
+    <item
+        android:id="@+id/notification"
+        android:icon="@drawable/notification_noactiv"
+        android:title="Notification"
+        />
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/setting_noactiv"
+        android:title="Setting" />
+
+
+
+</menu>
