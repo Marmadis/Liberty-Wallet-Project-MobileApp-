@@ -74,7 +74,7 @@ public class TransactionFragment extends Fragment {
 
         dateEdit = view.findViewById(R.id.date_transaction_edit);
         amountEdit = view.findViewById(R.id.amount_transaction_edit);
-        nameEdit = view.findViewById(R.id.name_edit);
+        nameEdit = view.findViewById(R.id.name_transaction_edit);
         back = view.findViewById(R.id.back_btn_transactionf);
         saveButton = view.findViewById(R.id.save_transaction_button);
         categorySpinner = view.findViewById(R.id.category_spinner);
@@ -157,7 +157,6 @@ public class TransactionFragment extends Fragment {
 
     }
     private void saveInformation(){
-        try {
             String name = nameEdit.getText().toString();
             String amount = amountEdit.getText().toString();
             String date = dateEdit.getText().toString();
@@ -184,10 +183,6 @@ public class TransactionFragment extends Fragment {
                     Toast.makeText(requireContext(), "JSON Error" + e, Toast.LENGTH_SHORT).show();
                 }
             }
-        } catch (NullPointerException e){
-            e.printStackTrace();
-            Toast.makeText(requireContext(), "Fields must be not empty" , Toast.LENGTH_SHORT).show();
-        }
     }
 
 
@@ -221,7 +216,7 @@ public class TransactionFragment extends Fragment {
     }
     private boolean saveControl(String name,String amount,String date,String selectedCategory){
 
-        if(name.isEmpty() || amount.isEmpty() || date.isEmpty() ){
+        if(name.trim().isEmpty() || amount.trim().isEmpty() || date.trim().isEmpty() ){
             showError(nameEdit,nameError,"Fields must not be empty");
             showError(amountEdit,amountError,"Fields must not be empty");
             showError(dateEdit,dateError,"Fields must not be empty");

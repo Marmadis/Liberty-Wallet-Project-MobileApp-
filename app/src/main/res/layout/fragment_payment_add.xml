@@ -10,7 +10,7 @@
 
 
     <ImageButton
-        android:id="@+id/back_btn_budget"
+        android:id="@+id/back_btn_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/back_btn_image"
@@ -21,13 +21,13 @@
         android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/adding_budget_title"
+        android:id="@+id/adding_payment_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="55dp"
         android:layout_marginTop="75dp"
         android:fontFamily="@font/inter_medium"
-        android:text="Adding a budget"
+        android:text="Adding a payment"
         android:textColor="@color/white"
         android:textSize="35sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adding_budget_title" />
+        app:layout_constraintTop_toBottomOf="@+id/adding_payment_title" />
 
     <TextView
         android:id="@+id/limit_amount_Error"
