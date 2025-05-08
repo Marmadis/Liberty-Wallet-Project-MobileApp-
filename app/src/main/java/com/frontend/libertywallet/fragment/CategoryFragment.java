@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.frontend.libertywallet.R;
 import com.frontend.libertywallet.service.CategoryService;
+import com.frontend.libertywallet.service.ForceLogOut;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,6 +74,9 @@ public class CategoryFragment extends Fragment {
             }
         });
 
+
+
+
     }
 
 
@@ -82,7 +86,7 @@ public class CategoryFragment extends Fragment {
             try{
 
                 String userId = prefs.getString("userId",null);
-                String token = prefs.getString("token",null);
+                String token = prefs.getString("access_token",null);
                 String BASE_URL = "http://10.0.2.2:9090/category/create/"+userId;
                 String name = nameEdit.getText().toString();
                 String type = categoryType.getSelectedItem().toString();
@@ -110,6 +114,12 @@ public class CategoryFragment extends Fragment {
         new Thread(()->{
             try{
                 Response response = client.newCall(request).execute();
+
+                if(response.code() == 403){
+                    ForceLogOut.forceLogout(getContext());
+                }
+
+
                 if(response.isSuccessful()){
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Category added successfully", Toast.LENGTH_SHORT).show();

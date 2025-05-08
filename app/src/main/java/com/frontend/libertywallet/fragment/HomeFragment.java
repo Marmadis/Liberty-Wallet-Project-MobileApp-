@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.frontend.libertywallet.R;
+import com.frontend.libertywallet.service.ForceLogOut;
+
 import android.content.Context;
 
 import org.json.JSONException;
@@ -77,6 +79,12 @@ public class HomeFragment extends Fragment {
         new Thread(() -> {
             try{
                 Response response = client.newCall(request).execute();
+
+                if(response.code() == 403){
+                    ForceLogOut.forceLogout(getContext());
+                }
+
+
                 if(response.isSuccessful()){
                     String responseBody = response.body().string();
                     JSONObject json = new JSONObject(responseBody);

@@ -61,7 +61,9 @@ public class RefreshToken {
                     Log.d("Refresh", "Token updated");
 
                 } else {
-                    Log.e("Refresh", "Failed to refresh: " + response.code());
+                        prefs.edit().putBoolean("forceLogout", true).apply();
+                        Log.e("Refresh", "Failed to refresh: " + response.code());
+
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

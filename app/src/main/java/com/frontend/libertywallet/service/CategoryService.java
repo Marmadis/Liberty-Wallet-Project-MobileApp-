@@ -24,48 +24,39 @@ public class CategoryService {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client  = new OkHttpClient();
 
-    public Map<String,String> getCategory(String userId,String token){
+    public interface CategoryCallback {
+        void onCategoriesLoaded(Map<String, String> categoryMap);
+    }
 
-        String BASE_URL = "http://10.0.2.2:9090/category/get/"+userId;
-        Map<String,String> category = new HashMap<>();
+    public void getCategory(String userId, String token, CategoryCallback callback) {
+        String BASE_URL = "http://10.0.2.2:9090/category/get/" + userId;
         Request request = new Request.Builder()
                 .url(BASE_URL)
                 .get()
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
 
-        new Thread(() ->{
-            try{
+        new Thread(() -> {
+            try {
                 Response response = client.newCall(request).execute();
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     String responseBody = response.body().string();
-                    JSONObject json = new JSONObject(responseBody);
-
                     JSONArray jsonArray = new JSONArray(responseBody);
+
+                    Map<String, String> category = new HashMap<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject categoryObj = jsonArray.getJSONObject(i);
-
                         String id = String.valueOf(categoryObj.getInt("id"));
                         String name = categoryObj.getString("name");
                         category.put(id, name);
                     }
 
-                }else {
-                    return;
+                    callback.onCategoriesLoaded(category); // <- Данные готовы
                 }
-                } catch (IOException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
-                return;
-                } catch (JSONException e){
-                e.printStackTrace();
-                return;
-                }
-
+            }
         }).start();
-
-
-        return category;
-
     }
 
 

@@ -18,12 +18,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.frontend.libertywallet.R;
+import com.frontend.libertywallet.service.ForceLogOut;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -68,7 +70,6 @@ public class BudgetFragment extends Fragment {
         back = view.findViewById(R.id.back_btn_budget);
         saveButton = view.findViewById(R.id.save_budget_button);
 
-
         startDateEdit.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -78,13 +79,15 @@ public class BudgetFragment extends Fragment {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     getContext(),
                     (view1, year1, month1, dayOfMonth) -> {
-                        String selectedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
-                        startDateEdit.setText(selectedDate);
+                        // ISO формат: yyyy-MM-dd
+                        String formattedDate = String.format(Locale.US, "%04d-%02d-%02d", year1, month1 + 1, dayOfMonth);
+                        startDateEdit.setText(formattedDate);
                     },
                     year, month, day
             );
             datePickerDialog.show();
         });
+
 
         endDateEdit.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
@@ -95,8 +98,9 @@ public class BudgetFragment extends Fragment {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     getContext(),
                     (view1, year1, month1, dayOfMonth) -> {
-                        String selectedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
-                        endDateEdit.setText(selectedDate);
+
+                        String formattedDate = String.format(Locale.US, "%04d-%02d-%02d", year1, month1 + 1, dayOfMonth);
+                        endDateEdit.setText(formattedDate);
                     },
                     year, month, day
             );
@@ -148,6 +152,11 @@ public class BudgetFragment extends Fragment {
         new Thread(()-> {
             try{
                 Response response = client.newCall(request).execute();
+
+                if(response.code() == 403){
+                    ForceLogOut.forceLogout(getContext());
+                }
+
                 if(response.isSuccessful()){
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Budget added successfully", Toast.LENGTH_SHORT).show();

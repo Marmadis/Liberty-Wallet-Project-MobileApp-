@@ -23,12 +23,15 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
 import com.frontend.libertywallet.R;
 import com.frontend.libertywallet.service.CategoryService;
+import com.frontend.libertywallet.service.ForceLogOut;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,14 +45,15 @@ import okhttp3.Response;
 public class TransactionFragment extends Fragment {
 
     ImageButton back;
+    private Map<String, String> cachedCategories = new HashMap<>();
 
 
-    private CategoryService categoryService;
     private SharedPreferences prefs;
 
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client  = new OkHttpClient();
 
+    private final CategoryService categoryService = new CategoryService();
 
     Button saveButton;
 
@@ -78,7 +82,13 @@ public class TransactionFragment extends Fragment {
         back = view.findViewById(R.id.back_btn_transactionf);
         saveButton = view.findViewById(R.id.save_transaction_button);
         categorySpinner = view.findViewById(R.id.category_spinner);
+
+
         prefs = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE);
+
+
+        loadCategories();
+
         saveButton.setOnClickListener(v -> saveInformation());
 
 
@@ -96,8 +106,9 @@ public class TransactionFragment extends Fragment {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     getContext(),
                     (view1, year1, month1, dayOfMonth) -> {
-                        String selectedDate = dayOfMonth + "/" + (month1 + 1) + "/" + year1;
-                        dateEdit.setText(selectedDate);
+
+                        String formattedDate = String.format(Locale.US, "%04d-%02d-%02d", year1, month1 + 1, dayOfMonth);
+                        dateEdit.setText(formattedDate);
                     },
                     year, month, day
             );
@@ -117,13 +128,36 @@ public class TransactionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        categoryService = new CategoryService();
-        String userId = prefs.getString("userId",null);
-        String token = prefs.getString("access_token",null);
-        updateCategory(categoryService.getCategory(userId,token));
+        String userId = prefs.getString("userId", null);
+        String token = prefs.getString("access_token", null);
+
+
+        categoryService.getCategory(userId, token, categoryMap -> {
+
+            cachedCategories = categoryMap;
+            requireActivity().runOnUiThread(() -> updateCategory(categoryMap));
+        });
     }
 
 
+    private void loadCategories() {
+        String userId = prefs.getString("userId", null);
+        String token = prefs.getString("access_token", null);
+
+        categoryService.getCategory(userId, token, categoryMap -> {
+            requireActivity().runOnUiThread(() -> {
+                List<String> categories = new ArrayList<>(categoryMap.values());
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        categories
+                );
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                categorySpinner.setAdapter(adapter);
+
+            });
+        });
+    }
     private void updateCategory(Map<String,String> categoryMap){
         List<String> categories = new ArrayList<>();
         categories.add("Choose category");
@@ -165,9 +199,8 @@ public class TransactionFragment extends Fragment {
 
             String userId = prefs.getString("userId", null);
             String token = prefs.getString("access_token", null);
-            Map<String, String> categoryMap = categoryService.getCategory(userId, token);
 
-            String categoryId = categoryService.getKeyByValue(categoryMap, selectedCategory);
+            String categoryId = categoryService.getKeyByValue(cachedCategories , selectedCategory);
             String BASE_URL = "http://10.0.2.2:9090/transaction/create/" + categoryId + "/" + userId;
 
 
@@ -196,6 +229,11 @@ public class TransactionFragment extends Fragment {
         new Thread(()-> {
             try{
                 Response response = client.newCall(request).execute();
+                
+                if(response.code() == 403){
+                    ForceLogOut.forceLogout(getContext());
+                }
+
                 if(response.isSuccessful()){
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Transaction added successfully", Toast.LENGTH_SHORT).show();

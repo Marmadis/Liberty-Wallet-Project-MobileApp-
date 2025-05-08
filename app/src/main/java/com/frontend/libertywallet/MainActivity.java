@@ -58,6 +58,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
+        boolean forceLogout = prefs.getBoolean("forceLogout", false);
+
+        if (forceLogout) {
+            prefs.edit().clear().apply(); // Очищаем все токены
+
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     public boolean checkerAuth () {
         return !TextUtils.isEmpty(prefs.getString("refresh_token", null)) &&
                 !TextUtils.isEmpty(prefs.getString("access_token", null)) &&
