@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="#000000">
+
+    <!-- Чекбокс -->
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:buttonTint="#CCCCCC"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Серый фон с информацией -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#DDDDDD"
+        android:padding="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:elevation="4dp"
+        android:backgroundTint="#DDDDDD"
+        android:clipToOutline="true">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loan (installment plan)"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/totalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• 1.000.000 ₸ - total amount"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/months"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• 0/24 months"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/monthlyPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• 41 667 ₸ - monthly payment"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/nextPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• Next payment: February 19th"
+            android:textColor="#000000" />
+    </LinearLayout>
+</LinearLayout>

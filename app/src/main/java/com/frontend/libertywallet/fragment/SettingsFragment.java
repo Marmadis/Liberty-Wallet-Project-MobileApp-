@@ -1,15 +1,28 @@
 package com.frontend.libertywallet.fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.frontend.libertywallet.R;
+import com.frontend.libertywallet.service.ForceLogOut;
+
 public class SettingsFragment  extends Fragment {
+
+
+    Button lougout;
+
+    TextView backView,sendFeedbackView,changePasswordView,changeUsernameView,faqView;
+
+    Switch pincodeSwitch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -21,5 +34,24 @@ public class SettingsFragment  extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        lougout = view.findViewById(R.id.logout_button);
+        backView = view.findViewById(R.id.back_btn_setting);
+
+        sendFeedbackView = view.findViewById(R.id.sendFeedback);
+        faqView = view.findViewById(R.id.faqs);
+        changePasswordView = view.findViewById(R.id.changePassword);
+        changeUsernameView = view.findViewById(R.id.changeUsername);
+
+        backView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        lougout.setOnClickListener( v -> ForceLogOut.forceLogout(getContext()));
+
     }
+
+
 }
