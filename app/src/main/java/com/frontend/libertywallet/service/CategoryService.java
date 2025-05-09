@@ -46,7 +46,7 @@ public class CategoryService {
                     Map<String, String> category = new HashMap<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject categoryObj = jsonArray.getJSONObject(i);
-                        String id = String.valueOf(categoryObj.getInt("id"));
+                        String id = String.valueOf(categoryObj.getString("id"));
                         String name = categoryObj.getString("name");
                         category.put(id, name);
                     }

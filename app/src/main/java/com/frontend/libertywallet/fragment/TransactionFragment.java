@@ -139,25 +139,27 @@ public class TransactionFragment extends Fragment {
         });
     }
 
-
     private void loadCategories() {
+        String token = prefs.getString("token", null);
         String userId = prefs.getString("userId", null);
-        String token = prefs.getString("access_token", null);
 
         categoryService.getCategory(userId, token, categoryMap -> {
+            cachedCategories = categoryMap;
+
+            List<String> categoryNames = new ArrayList<>(categoryMap.values());
+
             requireActivity().runOnUiThread(() -> {
-                List<String> categories = new ArrayList<>(categoryMap.values());
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(
                         requireContext(),
                         android.R.layout.simple_spinner_item,
-                        categories
+                        categoryNames
                 );
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 categorySpinner.setAdapter(adapter);
-
             });
         });
     }
+
     private void updateCategory(Map<String,String> categoryMap){
         List<String> categories = new ArrayList<>();
         categories.add("Choose category");
