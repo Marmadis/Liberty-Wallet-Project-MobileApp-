@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.notification_list);
         List<NotificationItem> notifications = new ArrayList<>();
-        NotificationAdapter adapter = new NotificationAdapter(notifications);
+        NotificationAdapter adapter = new NotificationAdapter(requireContext(), notifications);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);

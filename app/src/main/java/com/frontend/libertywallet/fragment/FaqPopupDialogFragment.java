@@ -1,5 +1,6 @@
 package com.frontend.libertywallet.fragment;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,6 +16,11 @@ import androidx.fragment.app.DialogFragment;
 
 import com.frontend.libertywallet.R;
 
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+
+
 public class FaqPopupDialogFragment extends DialogFragment {
 
 
@@ -25,6 +31,7 @@ public class FaqPopupDialogFragment extends DialogFragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.layout_faq_popup, container, false);
+
 
         Button okButton = view.findViewById(R.id.ok_button);
         okButton.setOnClickListener(v -> dismiss());
@@ -41,6 +48,8 @@ public class FaqPopupDialogFragment extends DialogFragment {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }
+
+
 
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;

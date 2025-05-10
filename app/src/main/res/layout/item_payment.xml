@@ -12,6 +12,7 @@
         android:layout_height="24dp"
         android:buttonTint="#CCCCCC"
         android:layout_gravity="center_vertical"
+        android:layout_marginBottom="40dp"
         android:layout_marginEnd="8dp" />
 
     <!-- Серый фон с информацией -->
