@@ -42,12 +42,25 @@ public class SettingsFragment  extends Fragment {
         changePasswordView = view.findViewById(R.id.changePassword);
         changeUsernameView = view.findViewById(R.id.changeUsername);
 
+
+        faqView.setOnClickListener(v -> {
+            FaqPopupDialogFragment popup = new FaqPopupDialogFragment();
+            popup.show(getParentFragmentManager(), "faq_popup");
+        });
+
+        sendFeedbackView.setOnClickListener(v -> {
+            FaqPopupDialogFragment popup = new FaqPopupDialogFragment();
+            popup.show(getParentFragmentManager(), "faq_popup");
+        });
+
         backView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
+
+
 
         lougout.setOnClickListener( v -> ForceLogOut.forceLogout(getContext()));
 
