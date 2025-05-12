@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.frontend.libertywallet.Entity.GraphItem;
 import com.frontend.libertywallet.R;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -42,7 +43,7 @@ public class ForeCastFragment extends Fragment {
 
     TextView forecastView;
     private OkHttpClient client = new OkHttpClient();
-    private LineChart lineChart;
+    private BarChart barChart;
 
     @Nullable
     @Override
@@ -50,10 +51,10 @@ public class ForeCastFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_forecast, container, false);
-        lineChart = view.findViewById(R.id.line_chart);
-        lineChart.getLegend().setEnabled(true);
-        lineChart.setExtraOffsets(5f, 10f, 5f, 5f);
-        lineChart.getDescription().setEnabled(false);
+        barChart = view.findViewById(R.id.line_chart);
+        barChart.getLegend().setEnabled(true);
+        barChart.setExtraOffsets(5f, 10f, 5f, 5f);
+        barChart.getDescription().setEnabled(false);
 
         forecastView = view.findViewById(R.id.forecast_view);
 
@@ -89,9 +90,8 @@ public class ForeCastFragment extends Fragment {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         String sum = obj.getString("sum");
-                        String dateStr = obj.getString("text");
+                        String dateStr = obj.getString("date");
                         Date date = inputFormat.parse(dateStr);
-
                         GraphItem item = new GraphItem();
                         item.setSum(sum);
                         item.setDate(date);
@@ -107,28 +107,33 @@ public class ForeCastFragment extends Fragment {
                         monthlySum.put(month, monthlySum.getOrDefault(month, 0f) + sum);
                     }
 
-                    List<Entry> entries = new ArrayList<>();
+                    List<com.github.mikephil.charting.data.BarEntry> entries = new ArrayList<>();
                     List<String> monthLabels = new ArrayList<>();
                     int index = 0;
 
                     for (Map.Entry<String, Float> entry : monthlySum.entrySet()) {
-                        entries.add(new Entry(index, entry.getValue()));
+                        entries.add(new com.github.mikephil.charting.data.BarEntry(index, entry.getValue()));
                         monthLabels.add(entry.getKey());
                         index++;
                     }
 
                     if (isAdded() && getActivity() != null) {
                         requireActivity().runOnUiThread(() -> {
-                            LineDataSet dataSet = new LineDataSet(entries, "Monthly Total");
+                            com.github.mikephil.charting.data.BarDataSet dataSet =
+                                    new com.github.mikephil.charting.data.BarDataSet(entries, "Monthly Total");
                             dataSet.setColor(ContextCompat.getColor(requireContext(), R.color.cornflowerBlue));
                             dataSet.setValueTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-                            dataSet.setCircleColor(ContextCompat.getColor(requireContext(), R.color.cornflowerBlue));
 
-                            LineData lineData = new LineData(dataSet);
-                            lineChart.setData(lineData);
-                            lineChart.getDescription().setEnabled(false);
+                            com.github.mikephil.charting.data.BarData barData =
+                                    new com.github.mikephil.charting.data.BarData(dataSet);
+                            barData.setBarWidth(0.9f);
 
-                            XAxis xAxis = lineChart.getXAxis();
+
+                            barChart.setData(barData);
+                            barChart.setFitBars(true);
+                            barChart.getDescription().setEnabled(false);
+
+                            XAxis xAxis = barChart.getXAxis();
                             xAxis.setGranularity(1f);
                             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                             xAxis.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
@@ -140,11 +145,11 @@ public class ForeCastFragment extends Fragment {
                                 }
                             });
 
-                            YAxis yAxisLeft = lineChart.getAxisLeft();
+                            YAxis yAxisLeft = barChart.getAxisLeft();
                             yAxisLeft.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-                            lineChart.getAxisRight().setEnabled(false);
+                            barChart.getAxisRight().setEnabled(false);
 
-                            lineChart.invalidate();
+                            barChart.invalidate(); // Обновить график
                         });
                     }
                 }
@@ -178,9 +183,10 @@ public class ForeCastFragment extends Fragment {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     double forecast = Double.parseDouble(responseBody);
+                    int forecastEasy = (int) forecast;
                     if (isAdded() && getActivity() != null) {
                         requireActivity().runOnUiThread(() -> {
-                            forecastView.setText("Forecast for next month:"+forecast+" ₸");
+                            forecastView.setText("Forecast for next month:"+forecastEasy+" ₸");
                         });
                     }
                 }
