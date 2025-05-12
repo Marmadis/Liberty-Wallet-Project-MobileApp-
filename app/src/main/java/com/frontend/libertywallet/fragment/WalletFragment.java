@@ -15,16 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.frontend.libertywallet.Adapter.HistoryAdapter;
-import com.frontend.libertywallet.Entity.GraphItem;
 import com.frontend.libertywallet.Entity.HistoryItem;
-import com.frontend.libertywallet.Entity.PopularItem;
 import com.frontend.libertywallet.R;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,7 +40,7 @@ import okhttp3.Response;
 
 public class WalletFragment extends Fragment {
 
-    private LineChart lineChart;
+    private PieChart pieChart;
     private RecyclerView historyList;
     private HistoryAdapter adapter;
     private final OkHttpClient client = new OkHttpClient();
@@ -55,7 +52,7 @@ public class WalletFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet, container, false);
 
-        lineChart = view.findViewById(R.id.line_chart);
+        pieChart = view.findViewById(R.id.pie_chart);
         historyList = view.findViewById(R.id.history_list);
 
         adapter = new HistoryAdapter(new ArrayList<>());
@@ -63,7 +60,7 @@ public class WalletFragment extends Fragment {
         historyList.setAdapter(adapter);
 
         fetchHistory();
-        fetchChartAndHistory();
+        fetchStatistics();
 
         return view;
     }
@@ -116,23 +113,12 @@ public class WalletFragment extends Fragment {
         }).start();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    private void fetchChartAndHistory() {
+    private void fetchStatistics() {
         SharedPreferences prefs = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE);
         String token = prefs.getString("access_token", null);
         String userId = prefs.getString("userId", null);
 
-        String url = "http://10.0.2.2:9090/statistics/get/alltime/" + userId;
+        String url = "http://10.0.2.2:9090/statistics/get/" + userId;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -145,76 +131,45 @@ public class WalletFragment extends Fragment {
                 if (!response.isSuccessful()) return;
 
                 String body = response.body().string();
-                JSONArray jsonArray = new JSONArray(body);
+                JSONObject json = new JSONObject(body);
+                JSONObject expensePercents = json.getJSONObject("expensePercents");
 
-                List<GraphItem> graphItems = new ArrayList<>();
+                List<PieEntry> entries = new ArrayList<>();
 
-                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                SimpleDateFormat displayFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.getJSONObject(i);
-                    String sum = obj.getString("sum");
-                    String dateStr = obj.getString("date");
-                    System.out.println(sum);
-                    Date date = inputFormat.parse(dateStr);
-                    String formattedDate = displayFormat.format(date);
-
-                    GraphItem graphItem = new GraphItem();
-                    graphItem.setSum(sum);
-                    graphItem.setDate(date);
-                    graphItems.add(graphItem);
-
-
-                }
-
-                Map<String, Float> monthlySum = new LinkedHashMap<>();
-                SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.getDefault());
-
-                for (GraphItem item : graphItems) {
-                    String month = monthFormat.format(item.getDate());
-                    float sum = Float.parseFloat(item.getSum());
-                    monthlySum.put(month, monthlySum.getOrDefault(month, 0f) + sum);
-                }
-
-                List<Entry> entries = new ArrayList<>();
-                List<String> monthLabels = new ArrayList<>();
-                int index = 0;
-
-                for (Map.Entry<String, Float> entry : monthlySum.entrySet()) {
-                    entries.add(new Entry(index, entry.getValue()));
-                    monthLabels.add(entry.getKey());
-                    index++;
+                for (int i = 0; i < expensePercents.names().length(); i++) {
+                    String key = expensePercents.names().getString(i);
+                    float value = (float) expensePercents.getDouble(key) * 100;
+                    entries.add(new PieEntry(value, key));
                 }
 
                 if (isAdded() && getActivity() != null) {
                     requireActivity().runOnUiThread(() -> {
-                        LineDataSet dataSet = new LineDataSet(entries, "Monthly expenses");
-                        dataSet.setColor(ContextCompat.getColor(requireContext(), R.color.cornflowerBlue));
+                        PieDataSet dataSet = new PieDataSet(entries, "Categories");
+                        dataSet.setColors(new int[]{
+                                R.color.blue,
+                                R.color.orange,
+                                R.color.red,
+                                R.color.green,
+                                R.color.purple,
+                                R.color.yellow
+                        }, requireContext());
+
                         dataSet.setValueTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-                        dataSet.setCircleColor(ContextCompat.getColor(requireContext(), R.color.cornflowerBlue));
-                        LineData lineData = new LineData(dataSet);
+                        dataSet.setValueTextSize(12f);
 
-                        lineChart.setData(lineData);
-                        lineChart.getDescription().setEnabled(false);
+                        PieData pieData = new PieData(dataSet);
+                        pieChart.setData(pieData);
+                        pieChart.setEntryLabelColor(ContextCompat.getColor(requireContext(), android.R.color.white));
+                        pieChart.setUsePercentValues(true);
+                        pieChart.getDescription().setEnabled(false);
+                        pieChart.setCenterText("Expenses");
+                        pieChart.setCenterTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
 
-                        XAxis xAxis = lineChart.getXAxis();
-                        xAxis.setGranularity(1f);
-                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                        xAxis.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-                        xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.ValueFormatter() {
-                            @Override
-                            public String getFormattedValue(float value) {
-                                int i = (int) value;
-                                return i >= 0 && i < monthLabels.size() ? monthLabels.get(i) : "";
-                            }
-                        });
+                        Legend legend = pieChart.getLegend();
+                        legend.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
+                        legend.setTextSize(12f);
 
-                        YAxis yAxisLeft = lineChart.getAxisLeft();
-                        yAxisLeft.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white));
-                        lineChart.getAxisRight().setEnabled(false);
-                        lineChart.invalidate();
-
+                        pieChart.invalidate();
                     });
                 }
             } catch (Exception e) {
