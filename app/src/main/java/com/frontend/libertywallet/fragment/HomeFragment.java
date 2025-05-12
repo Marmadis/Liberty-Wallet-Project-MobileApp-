@@ -1,6 +1,6 @@
 package com.frontend.libertywallet.fragment;
 
-import static android.content.Context.MODE_PRIVATE;
+
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,15 +30,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -50,9 +45,9 @@ public class HomeFragment extends Fragment {
 
     String userId;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-    OkHttpClient client  = new OkHttpClient();
+    OkHttpClient client = new OkHttpClient();
 
-    TextView transactionView,paymentView,currentBalanceText,budgetView,categoryView;
+    TextView transactionView, paymentView, currentBalanceText, budgetView, categoryView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,8 +70,6 @@ public class HomeFragment extends Fragment {
         transactionView.setOnClickListener(v -> openTransaction());
         paymentView.setOnClickListener(v -> openPayment());
 
-
-
         RecyclerView recyclerView = view.findViewById(R.id.notification_list);
         List<NotificationItem> notifications = new ArrayList<>();
         NotificationAdapter adapter = new NotificationAdapter(requireContext(), notifications);
@@ -84,9 +77,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         updatePayment(adapter);
-
     }
-
 
     @Override
     public void onResume() {
@@ -122,7 +113,6 @@ public class HomeFragment extends Fragment {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject categoryObj = jsonArray.getJSONObject(i);
-
                         String dateString = categoryObj.getString("date");
                         Date date = null;
                         try {
@@ -161,30 +151,21 @@ public class HomeFragment extends Fragment {
                         }
                     }
 
-                    if (isAdded()) {
-                        getActivity().runOnUiThread(() -> {
-                            adapter.setNotifications(notificationItems);
-                        });
+                    if (isAdded() && getActivity() != null) {
+                        getActivity().runOnUiThread(() -> adapter.setNotifications(notificationItems));
                     }
                 } else {
-                    if (isAdded()) {
+                    if (isAdded() && getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                         });
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
-                if (isAdded()) {
+                if (isAdded() && getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "IOException!", Toast.LENGTH_SHORT).show();
-                    });
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                if (isAdded()) {
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(getContext(), "JSON Exception!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), e.getClass().getSimpleName() + "!", Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -192,83 +173,82 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateData() {
-        String token  = prefs.getString("access_token",null);
-        userId = prefs.getString("userId",null);
-        String BASE_URL = "http://10.0.2.2:9090/budget/get/"+userId;
+        String token = prefs.getString("access_token", null);
+        userId = prefs.getString("userId", null);
+        String BASE_URL = "http://10.0.2.2:9090/budget/get/" + userId;
+
         Request request = new Request.Builder()
                 .url(BASE_URL)
                 .addHeader("Authorization", "Bearer " + token)
                 .get()
                 .build();
+
         new Thread(() -> {
-            try{
+            try {
                 Response response = client.newCall(request).execute();
 
-                if(response.code() == 403){
+                if (response.code() == 403 && isAdded()) {
                     ForceLogOut.forceLogout(getContext());
                 }
 
-
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     JSONObject json = new JSONObject(responseBody);
                     String current_balance = json.getString("current_balance");
 
-
-                    requireActivity().runOnUiThread(() -> {
-                        SharedPreferences prefs = requireActivity().getSharedPreferences("budget", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("current_balance", current_balance);
-                        editor.apply();
-                        currentBalanceText.setText("Your Balance \n" + current_balance + " ₸");
-                    });
-                }else {
-                    requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    if (isAdded() && getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            SharedPreferences prefs = getActivity().getSharedPreferences("budget", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("current_balance", current_balance);
+                            editor.apply();
+                            currentBalanceText.setText("Your Balance \n" + current_balance + " ₸");
+                        });
+                    }
+                } else {
+                    if (isAdded() && getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), e.getClass().getSimpleName() + "!", Toast.LENGTH_SHORT).show();
                     });
                 }
-            } catch (IOException e){
-                e.printStackTrace();
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "IOException! ", Toast.LENGTH_SHORT).show();
-                });
-            } catch (JSONException e){
-                e.printStackTrace();
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "JSON Exception! ", Toast.LENGTH_SHORT).show();
-                });
             }
         }).start();
-
     }
 
-
-
-    public void openBudget(){
+    public void openBudget() {
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new BudgetFragment())
                 .addToBackStack(null)
                 .commit();
     }
-    private void openTransaction(){
+
+    private void openTransaction() {
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new TransactionFragment())
                 .addToBackStack(null)
                 .commit();
     }
 
-    private void openPayment(){
-
+    private void openPayment() {
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new PaymentFragment())
                 .addToBackStack(null)
                 .commit();
     }
 
-    private void openCategory(){
+    private void openCategory() {
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new CategoryFragment())
                 .addToBackStack(null)
                 .commit();
     }
 }
+

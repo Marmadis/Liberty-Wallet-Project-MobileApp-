@@ -9,49 +9,51 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.frontend.libertywallet.R;
+
+import android.widget.Button;
+
 public class NotificationFragment extends Fragment {
+
+    private Button btnRecommendations, btnForecast;
+    private Button btnPersonalized, btnPopular, btnHistory;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
-        // По умолчанию показываем RecommendationFragment
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.recommendation_content_container, new RecommendationFragment())
-                .commit();
+        // Верхние кнопки
+        btnRecommendations = view.findViewById(R.id.btn_recommendations);
+        btnForecast = view.findViewById(R.id.btn_spending_forecasts);
+
+        // Нижние фильтры
+        btnPersonalized = view.findViewById(R.id.btn_personalized);
+        btnPopular = view.findViewById(R.id.btn_popular);
+        btnHistory = view.findViewById(R.id.btn_history);
+
+        // Обработчики
+        btnRecommendations.setOnClickListener(v -> loadFragment(new PersonalizedFragment())); // default
+        btnForecast.setOnClickListener(v -> loadFragment(new ForeCastFragment()));
+
+        btnPersonalized.setOnClickListener(v -> loadFragment(new PersonalizedFragment()));
+        btnPopular.setOnClickListener(v -> loadFragment(new PopularFragment()));
+        btnHistory.setOnClickListener(v -> loadFragment(new HistoryFragment()));
+
+        // По умолчанию показываем Personalized
+        loadFragment(new PersonalizedFragment());
 
         return view;
     }
 
-
-
-    private void openForeCast(){
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new ForeCastFragment())
-                .addToBackStack(null)
+    private void loadFragment(Fragment fragment) {
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.recommendation_content_container, fragment)
                 .commit();
     }
-
-    private void openHistory(){
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new HistoryFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-    private void openPernsonalized(){
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PersonalizedFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-    private void openPopular(){
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PopularFragment())
-                .addToBackStack(null)
-                .commit();
-    }
-
 }
+
+
+
