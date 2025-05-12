@@ -10,15 +10,48 @@ import androidx.fragment.app.Fragment;
 
 import com.frontend.libertywallet.R;
 public class NotificationFragment extends Fragment {
+
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_notification, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_notification, container, false);
+
+        // По умолчанию показываем RecommendationFragment
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.recommendation_content_container, new RecommendationFragment())
+                .commit();
+
+        return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
+
+    private void openForeCast(){
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new ForeCastFragment())
+                .addToBackStack(null)
+                .commit();
     }
+
+    private void openHistory(){
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new HistoryFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+    private void openPernsonalized(){
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new PersonalizedFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+    private void openPopular(){
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new PopularFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
 }

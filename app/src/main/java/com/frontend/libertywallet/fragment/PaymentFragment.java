@@ -158,12 +158,12 @@ public class PaymentFragment extends Fragment {
                 }
 
 
-                if(response.isSuccessful()){
-                    requireActivity().runOnUiThread(() -> {
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Transaction added successfully", Toast.LENGTH_SHORT).show();
                     });
-
-                }else {
+                }
+                else {
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                     });

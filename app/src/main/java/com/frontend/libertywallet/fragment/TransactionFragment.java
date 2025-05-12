@@ -135,7 +135,9 @@ public class TransactionFragment extends Fragment {
         categoryService.getCategory(userId, token, categoryMap -> {
 
             cachedCategories = categoryMap;
-            requireActivity().runOnUiThread(() -> updateCategory(categoryMap));
+            if (isAdded() && getActivity() != null) {
+                getActivity().runOnUiThread(() -> updateCategory(categoryMap));
+            }
         });
     }
 

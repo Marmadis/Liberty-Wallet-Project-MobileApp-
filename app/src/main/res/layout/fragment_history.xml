@@ -6,12 +6,6 @@
     android:layout_marginTop="10dp"
     android:padding="6dp">
 
-    <FrameLayout
-        android:id="@+id/recommendation_content_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"/>
     <!-- Верхний ряд: крупные кнопки -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -84,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="History"
-                android:backgroundTint="@color/tundora"
+                android:backgroundTint="@color/cornflowerBlue"
                 android:fontFamily="@font/inter_medium"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />

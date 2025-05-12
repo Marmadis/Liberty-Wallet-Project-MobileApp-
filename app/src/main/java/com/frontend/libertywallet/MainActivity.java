@@ -23,10 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         prefs = getSharedPreferences("auth", MODE_PRIVATE);
         setContentView(R.layout.activity_main);
-        if(!checkerAuth()){
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
-            finish();
-        }
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);

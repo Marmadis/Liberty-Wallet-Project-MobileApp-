@@ -6,12 +6,6 @@
     android:layout_marginTop="10dp"
     android:padding="6dp">
 
-    <FrameLayout
-        android:id="@+id/recommendation_content_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"/>
     <!-- Верхний ряд: крупные кнопки -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +15,7 @@
         android:layout_marginBottom="12dp">
 
         <Button
-            android:id="@+id/btn_recommendations"
+            android:id="@+id/btn_recommendations_personal"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:fontFamily="@font/inter_medium"
@@ -32,7 +26,7 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/btn_spending_forecasts"
+            android:id="@+id/btn_spending_forecasts_personal"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -58,18 +52,18 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_personalized"
+                android:id="@+id/btn_personalized_personal"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="Personalized"
                 android:layout_marginEnd="8dp"
-                android:backgroundTint="@color/tundora"
+                android:backgroundTint="@color/cornflowerBlue"
                 android:fontFamily="@font/inter_medium"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
             <Button
-                android:id="@+id/btn_popular"
+                android:id="@+id/btn_popular_personal"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="Popular"
@@ -80,7 +74,7 @@
                 android:textSize="14sp" />
 
             <Button
-                android:id="@+id/btn_history"
+                android:id="@+id/btn_history_personal"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:text="History"

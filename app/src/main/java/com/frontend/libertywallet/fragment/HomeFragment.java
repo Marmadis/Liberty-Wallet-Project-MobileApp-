@@ -94,28 +94,26 @@ public class HomeFragment extends Fragment {
         updateData();
     }
 
-
-    private void updatePayment( NotificationAdapter adapter){
-        String token  = prefs.getString("access_token",null);
-        userId = prefs.getString("userId",null);
-        String BASE_URL = "http://10.0.2.2:9090/payment/get/"+userId;
-
+    private void updatePayment(NotificationAdapter adapter) {
+        String token = prefs.getString("access_token", null);
+        userId = prefs.getString("userId", null);
+        String BASE_URL = "http://10.0.2.2:9090/payment/get/" + userId;
 
         Request request = new Request.Builder()
                 .url(BASE_URL)
                 .addHeader("Authorization", "Bearer " + token)
                 .get()
                 .build();
+
         new Thread(() -> {
-            try{
+            try {
                 Response response = client.newCall(request).execute();
 
-                if(response.code() == 403){
+                if (response.code() == 403 && isAdded()) {
                     ForceLogOut.forceLogout(getContext());
                 }
 
-
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     JSONArray jsonArray = new JSONArray(responseBody);
 
@@ -125,7 +123,6 @@ public class HomeFragment extends Fragment {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject categoryObj = jsonArray.getJSONObject(i);
 
-
                         String dateString = categoryObj.getString("date");
                         Date date = null;
                         try {
@@ -133,7 +130,6 @@ public class HomeFragment extends Fragment {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
 
                         NotificationItem notificationItem = new NotificationItem(
                                 categoryObj.getString("id"),
@@ -163,31 +159,38 @@ public class HomeFragment extends Fragment {
                         if (today.equals(paymentDate)) {
                             notificationItems.add(notificationItem);
                         }
+                    }
 
-
-                        requireActivity().runOnUiThread(() -> {
+                    if (isAdded()) {
+                        getActivity().runOnUiThread(() -> {
                             adapter.setNotifications(notificationItems);
-
                         });
                     }
-                }else {
-                    requireActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (isAdded()) {
+                        getActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "IOException!", Toast.LENGTH_SHORT).show();
                     });
                 }
-            } catch (IOException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "IOException! ", Toast.LENGTH_SHORT).show();
-                });
-            } catch (JSONException e){
-                e.printStackTrace();
-                requireActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(), "JSON Exception! ", Toast.LENGTH_SHORT).show();
-                });
+                if (isAdded()) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "JSON Exception!", Toast.LENGTH_SHORT).show();
+                    });
+                }
             }
         }).start();
     }
+
     private void updateData() {
         String token  = prefs.getString("access_token",null);
         userId = prefs.getString("userId",null);

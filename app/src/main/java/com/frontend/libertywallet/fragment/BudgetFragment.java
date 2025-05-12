@@ -157,12 +157,12 @@ public class BudgetFragment extends Fragment {
                     ForceLogOut.forceLogout(getContext());
                 }
 
-                if(response.isSuccessful()){
-                    requireActivity().runOnUiThread(() -> {
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Budget added successfully", Toast.LENGTH_SHORT).show();
                     });
 
-                }else {
+            }else {
                     requireActivity().runOnUiThread(() -> {
                         Toast.makeText(requireContext(), "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                     });

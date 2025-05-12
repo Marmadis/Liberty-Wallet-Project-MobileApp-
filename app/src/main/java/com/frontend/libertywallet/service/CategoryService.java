@@ -20,8 +20,7 @@ import java.util.HashMap;
 import  java.util.Map;
 public class CategoryService {
 
-    private SharedPreferences prefs;
-    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
     OkHttpClient client  = new OkHttpClient();
 
     public interface CategoryCallback {
@@ -51,7 +50,7 @@ public class CategoryService {
                         category.put(id, name);
                     }
 
-                    callback.onCategoriesLoaded(category); // <- Данные готовы
+                    callback.onCategoriesLoaded(category);
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
