@@ -35,13 +35,23 @@ public class SettingsFragment  extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         lougout = view.findViewById(R.id.logout_button);
-        backView = view.findViewById(R.id.back_btn_setting);
 
         sendFeedbackView = view.findViewById(R.id.sendFeedback);
         faqView = view.findViewById(R.id.faqs);
         changePasswordView = view.findViewById(R.id.changePassword);
         changeUsernameView = view.findViewById(R.id.changeUsername);
 
+
+
+        changePasswordView.setOnClickListener(v -> {
+            FaqPopupDialogFragment popup = new FaqPopupDialogFragment();
+            popup.show(getParentFragmentManager(), "faq_popup");
+        });
+
+        changeUsernameView.setOnClickListener(v -> {
+            FaqPopupDialogFragment popup = new FaqPopupDialogFragment();
+            popup.show(getParentFragmentManager(), "faq_popup");
+        });
 
         faqView.setOnClickListener(v -> {
             FaqPopupDialogFragment popup = new FaqPopupDialogFragment();
@@ -53,12 +63,6 @@ public class SettingsFragment  extends Fragment {
             popup.show(getParentFragmentManager(), "faq_popup");
         });
 
-        backView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
 
 
 

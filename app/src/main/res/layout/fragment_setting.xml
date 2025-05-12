@@ -9,15 +9,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Назад -->
-        <TextView
-            android:id="@+id/back_btn_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="← Back"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:paddingBottom="16dp" />
 
         <!-- Профиль и безопасность -->
         <TextView
