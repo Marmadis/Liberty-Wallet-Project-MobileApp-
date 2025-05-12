@@ -85,7 +85,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(NotificationAdapter.ViewHolder holder, int position) {
         NotificationItem item = notificationList.get(position);
 
-        Date date = item.getDate(); // допустим, у тебя уже Date
+        Date date = item.getDate();
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

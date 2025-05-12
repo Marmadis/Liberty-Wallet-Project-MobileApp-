@@ -79,7 +79,7 @@ public class BudgetFragment extends Fragment {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     getContext(),
                     (view1, year1, month1, dayOfMonth) -> {
-                        // ISO формат: yyyy-MM-dd
+
                         String formattedDate = String.format(Locale.US, "%04d-%02d-%02d", year1, month1 + 1, dayOfMonth);
                         startDateEdit.setText(formattedDate);
                     },
